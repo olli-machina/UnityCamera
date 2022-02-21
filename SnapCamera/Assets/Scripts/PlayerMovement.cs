@@ -4,30 +4,24 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed, lookSpeed;
-
-    private Transform playerBody;
-
-    float xRotation = 0f;
+    private CharacterController controller;
+    public float speed;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        playerBody = GetComponent<Transform>();
-        Cursor.lockState = CursorLockMode.Locked;
+        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * lookSpeed * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * lookSpeed * Time.deltaTime;
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        Vector3 move = transform.right * x + transform.forward * z;
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        controller.Move(move * speed * Time.deltaTime);
     }
 }
