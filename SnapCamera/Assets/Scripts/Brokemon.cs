@@ -10,4 +10,5 @@ public class Brokemon : ScriptableObject
     public MeshRenderer broModel;
     public int pointValue;
     public Vector3 broColor;
+    public int speed;
 }
