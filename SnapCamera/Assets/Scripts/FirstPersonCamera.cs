@@ -6,15 +6,13 @@ public class FirstPersonCamera : MonoBehaviour
 {
     public float moveSpeed, lookSpeed;
 
-    private Transform playerBody;
+    public PlayerMovement playerBody;
 
     float xRotation = 0f, yRotation = 0f;
-
 
     // Start is called before the first frame update
     void Start()
     {
-        playerBody = transform;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -29,6 +27,6 @@ public class FirstPersonCamera : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        playerBody.RotatePlayer(Vector3.up * mouseX);
     }
 }

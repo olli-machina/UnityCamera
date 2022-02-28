@@ -8,6 +8,10 @@ public class BrokemonScript : MonoBehaviour
     private Vector3 startLocation;
     public float moveDuration = 2;
     public float timeElapsed = 0;
+
+    public string name;
+    public int points;
+    bool inFOV;
     // Start is called before the first frame update
     void Start()
     {

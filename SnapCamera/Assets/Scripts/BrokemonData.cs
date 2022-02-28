@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Brokemon", menuName = "ScriptableObjects/Brokemon", order = 1)]
-public class Brokemon : ScriptableObject
+public class BrokemonData : ScriptableObject
 {
     public string broName;
     public MeshRenderer broModel;

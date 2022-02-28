@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9c96efde9f8e341b276c7392d95c3c, type: 3}
-  m_Name: Brokemon
+  m_Name: Broski
   m_EditorClassIdentifier: 
   broName: Broski
-  broModel: {fileID: 0}
-  pointValue: 0
+  broModel: {fileID: 6023569659413943635, guid: f2d2845834093d8489e5ce85f86a9393, type: 3}
+  pointValue: 10
   broColor: {x: 0, y: 0, z: 0}
+  speed: 0
