@@ -20,6 +20,8 @@ public class CameraScript : MonoBehaviour
     public int photoCount = 10;
     public float photoDisplayTime;
 
+    private GameManager gameManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +29,7 @@ public class CameraScript : MonoBehaviour
         screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
         counterText.SetText(photoCount.ToString());
         photoTimer = photoDisplayTime;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     // Update is called once per frame
     void Update()
@@ -45,12 +48,14 @@ public class CameraScript : MonoBehaviour
                 photoCount--;
                 counterText.SetText(photoCount.ToString());
                 photoTimer = photoDisplayTime;
+                gameManager.AddToList();
 
                 //if (photoCount <= 0)
                 //{
                 //    cameraUI.SetActive(false);
                 //    outOfFilm = true;
                 //}
+
             }
         }
 

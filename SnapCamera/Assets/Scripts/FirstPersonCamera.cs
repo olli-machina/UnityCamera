@@ -6,7 +6,7 @@ public class FirstPersonCamera : MonoBehaviour
 {
     public float moveSpeed, lookSpeed;
 
-    public PlayerMovement playerBody;
+   // public GameObject playerBody;
 
     float xRotation = 0f, yRotation = 0f;
 
@@ -27,6 +27,6 @@ public class FirstPersonCamera : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        playerBody.RotatePlayer(Vector3.up * mouseX);
+      //  playerBody.transform.rotation = transform.localRotation;
     }
 }

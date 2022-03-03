@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
 
     public int maxRadius, maxAngle, maxHeightLimit;
-    Transform[] inRangePokemon;
+    public Transform[] inRangePokemon;
 
     // Start is called before the first frame update
     void Start()
@@ -28,13 +28,8 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(move * speed * Time.deltaTime);
 
         inRangePokemon = inFOV(transform, maxRadius, maxAngle);
-        for (int i = 0; i < inRangePokemon.Length; i++) 
-        { 
-            if (inRangePokemon[i] != null) 
-            { 
-                Debug.Log(inRangePokemon[i].name); 
-            } 
-        }
+        
+
     }
 
     public void RotatePlayer(Vector3 angle) //might delete, temp fix
