@@ -5,7 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public List<string> pokemonList;
+    public List<Texture2D> collectedPhotos;
     public PlayerMovement playerMove;
+    public CameraScript camScript;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +35,7 @@ public class GameManager : MonoBehaviour
         for (int i =0; i < playerMove.inRangePokemon.Length; i++)
         { if (pokemonList.Contains(name))
             {
-                //code here for grouping photos
+               //code here for grouping photos
             }
             else
             {
@@ -46,5 +48,12 @@ public class GameManager : MonoBehaviour
                     Debug.Log("nope");
             }
         }
+    }
+
+    public void CollectPhotos(List<Texture2D> photos)
+    {
+        playerMove.moveSpeed = 0f;
+        collectedPhotos = photos;
+        camScript.ShowPhoto(collectedPhotos[0]);
     }
 }

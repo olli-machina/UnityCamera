@@ -4,37 +4,36 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private CharacterController controller;
-    public float speed;
-
     public int maxRadius, maxAngle, maxHeightLimit;
+    public float moveSpeed, moveDist;
     public Transform[] inRangePokemon;
+
+    private float timeMoved;
+    private Vector3 startPoint, endPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<CharacterController>();
         inRangePokemon = null;
+        startPoint = transform.position;
+        endPoint = transform.position + (Vector3.forward * moveDist);
     }
 
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.right * x + transform.forward * z;
-
-        controller.Move(move * speed * Time.deltaTime);
-
-        inRangePokemon = inFOV(transform, maxRadius, maxAngle);
+         inRangePokemon = inFOV(transform, maxRadius, maxAngle);
         
-
-    }
-
-    public void RotatePlayer(Vector3 angle) //might delete, temp fix
-    {
-        transform.Rotate(angle);
+        transform.position = Vector3.Lerp(startPoint, endPoint, timeMoved / moveSpeed);
+        if (timeMoved >= moveSpeed)
+        {
+            Vector3 temp = endPoint;
+            endPoint = startPoint;
+            startPoint = temp;
+            timeMoved = 0f;
+        }
+        else
+            timeMoved += Time.deltaTime;
     }
 
     private void OnDrawGizmos()
@@ -44,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 fovLine1 = Quaternion.AngleAxis(maxAngle, transform.up) * transform.forward * maxRadius;
         Vector3 fovLine2 = Quaternion.AngleAxis(-maxAngle, transform.up) * transform.forward * maxRadius;
-        Gizmos.color = Color.blue; //both upper and lower FOV bounds
+        Gizmos.color = Color.blue; //both right and left FOV bounds
         Gizmos.DrawRay(transform.position, fovLine1);
         Gizmos.DrawRay(transform.position, fovLine2); 
         

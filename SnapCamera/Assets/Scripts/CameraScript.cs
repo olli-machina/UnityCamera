@@ -17,10 +17,12 @@ public class CameraScript : MonoBehaviour
     private float photoTimer;
     public bool outOfFilm = false;
 
+    public List<Texture2D> savedPhotos;
     public int photoCount = 10;
     public float photoDisplayTime;
 
     private GameManager gameManager;
+    public Camera main, aim;
 
 
     // Start is called before the first frame update
@@ -49,14 +51,18 @@ public class CameraScript : MonoBehaviour
                 counterText.SetText(photoCount.ToString());
                 photoTimer = photoDisplayTime;
                 gameManager.AddToList();
-
-                //if (photoCount <= 0)
-                //{
-                //    cameraUI.SetActive(false);
-                //    outOfFilm = true;
-                //}
-
             }
+        }
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            aim.gameObject.SetActive(true);
+            main.gameObject.SetActive(false);
+        }
+        if(Input.GetMouseButtonUp(1))
+        {
+            aim.gameObject.SetActive(false);
+            main.gameObject.SetActive(true);
         }
 
         if(photoVisible)
@@ -70,7 +76,6 @@ public class CameraScript : MonoBehaviour
 
         IEnumerator CapturePhoto()
         {
-            //camera ui set false
             cameraUI.SetActive(false);
             photoVisible = true;
 
@@ -80,32 +85,32 @@ public class CameraScript : MonoBehaviour
 
             screenCapture.ReadPixels(regionToRead, 0, 0, false);
             screenCapture.Apply();
-            ShowPhoto();
+            savedPhotos.Add(screenCapture);
+            ShowPhoto(screenCapture);
             if (photoCount > 0)
             {
                 cameraUI.SetActive(true);
-                //cameraUI.SetActive(false);
             }
             else
             {
                 outOfFilm = true;
+                gameManager.CollectPhotos(savedPhotos);
             }
         }
 
-        void ShowPhoto()
-        {
-            Sprite photoSprite = Sprite.Create(screenCapture, new Rect(0.0f, 0.0f, screenCapture.width, screenCapture.height), new Vector2(0.5f, 0.5f), 100.0f);
-            photoDisplayArea.sprite = photoSprite;
 
-            photoFrame.SetActive(true);
-        }
+    }
+    public void ShowPhoto(Texture2D photo)
+    {
+        Sprite photoSprite = Sprite.Create(photo, new Rect(0.0f, 0.0f, photo.width, photo.height), new Vector2(0.5f, 0.5f), 100.0f);
+        photoDisplayArea.sprite = photoSprite;
 
-        void RemovePhoto()
-        {
-            photoVisible = false;
-            photoFrame.SetActive(false);
-          //  cameraUI.SetActive(true);
-        }
+        photoFrame.SetActive(true);
+    }
 
+    void RemovePhoto()
+    {
+        photoVisible = false;
+        photoFrame.SetActive(false);
     }
 }

@@ -5,10 +5,7 @@ using UnityEngine;
 public class FirstPersonCamera : MonoBehaviour
 {
     public float moveSpeed, lookSpeed;
-
-   // public GameObject playerBody;
-
-    float xRotation = 0f, yRotation = 0f;
+    private float xRotation = 0f, yRotation = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -24,9 +21,8 @@ public class FirstPersonCamera : MonoBehaviour
 
         xRotation -= mouseY;
         yRotation += mouseX;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        xRotation = Mathf.Clamp(xRotation, -60f, 60f);
 
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-      //  playerBody.transform.rotation = transform.localRotation;
     }
 }
