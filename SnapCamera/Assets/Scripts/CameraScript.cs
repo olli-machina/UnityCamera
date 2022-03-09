@@ -17,7 +17,6 @@ public class CameraScript : MonoBehaviour
     private float photoTimer;
     public bool outOfFilm = false;
 
-    public List<Texture2D> savedPhotos;
     public int photoCount = 10;
     public float photoDisplayTime;
 
@@ -38,20 +37,26 @@ public class CameraScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!outOfFilm)
+            if (!gameManager.reviewScreen)
             {
-                if (photoVisible)
+                if (!outOfFilm)
                 {
-                    photoVisible = false;
-                    photoFrame.SetActive(false);
-                }
+                    if (photoVisible)
+                    {
+                        photoVisible = false;
+                        photoFrame.SetActive(false);
+                    }
 
-                StartCoroutine(CapturePhoto());
-                photoCount--;
-                counterText.SetText(photoCount.ToString());
-                photoTimer = photoDisplayTime;
-                gameManager.AddToList();
+                    StartCoroutine(CapturePhoto());
+                    photoCount--;
+                    counterText.SetText(photoCount.ToString());
+                    photoTimer = photoDisplayTime;
+                }
             }
+            //else
+            //{
+            //    gameManager.NextPhoto();
+            //}
         }
 
         if(Input.GetMouseButtonDown(1))
@@ -85,7 +90,7 @@ public class CameraScript : MonoBehaviour
 
             screenCapture.ReadPixels(regionToRead, 0, 0, false);
             screenCapture.Apply();
-            savedPhotos.Add(screenCapture);
+            gameManager.RecordPhotoData(screenCapture);
             ShowPhoto(screenCapture);
             if (photoCount > 0)
             {
@@ -94,7 +99,7 @@ public class CameraScript : MonoBehaviour
             else
             {
                 outOfFilm = true;
-                gameManager.CollectPhotos(savedPhotos);
+                gameManager.NextPhoto();
             }
         }
 

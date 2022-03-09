@@ -7,14 +7,21 @@ public class PlayerMovement : MonoBehaviour
     public int maxRadius, maxAngle, maxHeightLimit;
     public float moveSpeed, moveDist;
     public Transform[] inRangePokemon;
+    //public List<float> photoAngles;
 
     private float timeMoved;
     private Vector3 startPoint, endPoint;
+
+    private float mainPokeAngle;
+    private int mainPokeIndex;
+    public Transform photoPokemon;
+    public bool pokemonInPhoto = false;
 
     // Start is called before the first frame update
     void Start()
     {
         inRangePokemon = null;
+        photoPokemon = null;
         startPoint = transform.position;
         endPoint = transform.position + (Vector3.forward * moveDist);
     }
@@ -22,9 +29,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         inRangePokemon = inFOV(transform, maxRadius, maxAngle);
-        
-        transform.position = Vector3.Lerp(startPoint, endPoint, timeMoved / moveSpeed);
+        inRangePokemon = inFOV(transform, maxRadius, maxAngle);
+        if (inRangePokemon.Length > 0)
+            pokemonInPhoto = true;
+        else
+            pokemonInPhoto = false;
+       // transform.position = Vector3.Lerp(startPoint, endPoint, timeMoved / moveSpeed);
         if (timeMoved >= moveSpeed)
         {
             Vector3 temp = endPoint;
@@ -34,6 +44,35 @@ public class PlayerMovement : MonoBehaviour
         }
         else
             timeMoved += Time.deltaTime;
+    }
+
+    public float getAngle()
+    {
+        float angleCount = 0f;
+        mainPokeAngle = 0f;
+
+        for (int i = 1; i < inRangePokemon.Length; i++)
+        {
+            Vector3 directionBetween = (inRangePokemon[i].position - transform.position).normalized;
+            //directionBetween.y *= 0; //height not a factor
+            float angleBetween = Vector3.Angle(transform.forward, directionBetween);
+            angleCount += angleBetween;
+            photoPokemon = setMainPokemon(angleBetween, i);
+        }
+        float avgAngle = angleCount / inRangePokemon.Length;
+        return avgAngle;
+    }
+
+    public Transform setMainPokemon(float newAngle, int index)
+    {
+        if (newAngle > mainPokeAngle)
+        {
+            mainPokeIndex = index;
+            mainPokeAngle = newAngle;
+            return inRangePokemon[index];
+        }
+        else
+            return inRangePokemon[mainPokeIndex];
     }
 
     private void OnDrawGizmos()
@@ -69,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Collider[] overlaps = new Collider[10]; //everything in range
         int count = Physics.OverlapSphereNonAlloc(checkingObj.position, maxRadius, overlaps);
-        Transform[] pokemon = new Transform[count];
+        List<Transform> pokemon = new List<Transform>();// = new Transform[count];
 
         for (int i = 0; i < count; i++)
         {
@@ -91,7 +130,8 @@ public class PlayerMovement : MonoBehaviour
                             if (hit.transform == temp) //if it's the target
                             {
                                 //return temp;
-                                pokemon[i] = temp;
+                                //pokemon[i] = temp;
+                                pokemon.Add(temp);
                             }
                         }
                     }
@@ -99,6 +139,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        return pokemon;
+        return pokemon.ToArray();
+       // return pokemon;
     }
 }

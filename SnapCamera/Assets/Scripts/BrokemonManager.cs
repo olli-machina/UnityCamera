@@ -4,8 +4,19 @@ using UnityEngine;
 
 public class BrokemonManager : MonoBehaviour
 {
-    public BrokemonData[] pokemonList;
-    public Transform player;
+    public struct PhotoData
+    {
+        public string name;
+        public Texture2D photo;
+        public float angle;
+        public PhotoData(string addName, Texture2D addPhoto, float addAngle)
+        {
+            this.name = addName;
+            this.photo = addPhoto;
+            this.angle = addAngle;
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
