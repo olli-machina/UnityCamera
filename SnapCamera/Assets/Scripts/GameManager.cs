@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         else
         {
             PokemonManager.PhotoData newPhoto = new PokemonManager.PhotoData
-            ( "---", photo, 500f);
+            ( "---", photo, playerMove.maxAngle);
 
             photoCollection[photoIndex] = newPhoto;
         }
@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
             Texture2D currentPhoto = photoCollection[reviewIndex].photo;
             camScript.ShowPhoto(currentPhoto);
             reviewPhotoName.text = photoCollection[reviewIndex].name;
-            int score = Mathf.Abs(500 - ((int)photoCollection[reviewIndex].angle)*10);
+            int score = (playerMove.maxAngle - Mathf.Abs(((int)photoCollection[reviewIndex].angle)))*10;
             reviewPhotoScore.text = score.ToString();
         }
     }
