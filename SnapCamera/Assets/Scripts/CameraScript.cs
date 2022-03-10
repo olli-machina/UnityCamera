@@ -6,34 +6,31 @@ using TMPro;
 
 public class CameraScript : MonoBehaviour
 {
-    [Header("Photo Taker")]
+    [Header("Photo Display")]
     [SerializeField] private Image photoDisplayArea, endReviewDisplayArea;
     [SerializeField] private GameObject photoFrame, endPhotoFrame;
     [SerializeField] private GameObject cameraUI;
     [SerializeField] private TextMeshProUGUI counterText;
 
-    private Texture2D screenCapture;
-    private bool photoVisible;
-    private float photoTimer;
+    public Camera main, aim;
+    public GameObject endText;
     public bool outOfFilm = false;
-
     public int photoCount = 2;
     public float photoDisplayTime, endWaitTime;
 
     private GameManager gameManager;
-    public Camera main, aim;
-    public GameObject endText;
+    private Texture2D screenCapture;
+    private bool photoVisible;
+    private float photoTimer;
 
-    // Start is called before the first frame update
     void Start()
     {
         counterText.SetText(photoCount.ToString());
         photoTimer = photoDisplayTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
     }
-    // Update is called once per frame
+    
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -131,7 +128,6 @@ public class CameraScript : MonoBehaviour
             endReviewDisplayArea.sprite = photoSprite;
             endPhotoFrame.SetActive(true);
         }
-
     }
 
     void RemovePhoto()

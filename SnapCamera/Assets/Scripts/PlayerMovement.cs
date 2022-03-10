@@ -6,18 +6,16 @@ public class PlayerMovement : MonoBehaviour
 {
     public int maxRadius, maxAngle, maxHeightLimit;
     public float moveSpeed, moveDist;
-    public Transform[] inRangePokemon;
-    //public List<float> photoAngles;
+    public Transform[] inRangePokemon; //all pokemon in FOV
+    public Transform photoPokemon; //main pokemon in the photo
+    public bool pokemonInPhoto = false;
 
     private float timeMoved;
     private Vector3 startPoint, endPoint;
+    private float mainPokeAngle = 0f; //angle of the main pokemon in the photo
+    private int mainPokeIndex = 0; //index in the fov array of the main pokemon
 
-    private float mainPokeAngle = 0f;
-    private int mainPokeIndex = 0;
-    public Transform photoPokemon;
-    public bool pokemonInPhoto = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         inRangePokemon = null;
@@ -26,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
         endPoint = transform.position + (Vector3.forward * moveDist);
     }
 
-    // Update is called once per frame
     void Update()
     {
         inRangePokemon = inFOV(transform, maxRadius, maxAngle);
@@ -34,7 +31,9 @@ public class PlayerMovement : MonoBehaviour
             pokemonInPhoto = true;
         else
             pokemonInPhoto = false;
-       // transform.position = Vector3.Lerp(startPoint, endPoint, timeMoved / moveSpeed);
+       
+        transform.position = Vector3.Lerp(startPoint, endPoint, timeMoved / moveSpeed);
+        
         if (timeMoved >= moveSpeed)
         {
             Vector3 temp = endPoint;
@@ -108,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Collider[] overlaps = new Collider[10]; //everything in range
         int count = Physics.OverlapSphereNonAlloc(checkingObj.position, maxRadius, overlaps);
-        List<Transform> pokemon = new List<Transform>();// = new Transform[count];
+        List<Transform> pokemon = new List<Transform>();
 
         for (int i = 0; i < count; i++)
         {
@@ -129,8 +128,6 @@ public class PlayerMovement : MonoBehaviour
                         {
                             if (hit.transform == temp) //if it's the target
                             {
-                                //return temp;
-                                //pokemon[i] = temp;
                                 pokemon.Add(temp);
                             }
                         }
@@ -140,6 +137,5 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         return pokemon.ToArray();
-       // return pokemon;
     }
 }

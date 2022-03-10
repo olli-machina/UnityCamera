@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public PlayerMovement playerMove;
     public CameraScript camScript;
-    public BrokemonManager.PhotoData[] photoCollection;
-
-    public BrokemonManager pokemonManager;
+    public PokemonManager.PhotoData[] photoCollection;
 
     public Text photoName, photoScore;
-
     public bool reviewScreen = false;
     public int photoIndex = 0;
-
     public int reviewIndex = 0;
-
-    private int overallScore;
 
     [SerializeField] private Image reviewPhotoArea;
     [SerializeField] private GameObject reviewPhotoFrame;
@@ -28,13 +23,19 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        photoCollection = new BrokemonManager.PhotoData[camScript.photoCount];
+        photoCollection = new PokemonManager.PhotoData[camScript.photoCount];
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     public void RecordPhotoData(Texture2D photo)
@@ -43,15 +44,15 @@ public class GameManager : MonoBehaviour
         {
             float angle = playerMove.getAngle();
             string name = playerMove.photoPokemon.name;
-            BrokemonManager.PhotoData newPhoto = new BrokemonManager.PhotoData
+            PokemonManager.PhotoData newPhoto = new PokemonManager.PhotoData
             (name, photo, angle);
 
             photoCollection[photoIndex] = newPhoto;
         }
         else
         {
-            BrokemonManager.PhotoData newPhoto = new BrokemonManager.PhotoData
-            ( "none", photo, 0f);
+            PokemonManager.PhotoData newPhoto = new PokemonManager.PhotoData
+            ( "---", photo, 500f);
 
             photoCollection[photoIndex] = newPhoto;
         }
@@ -65,7 +66,6 @@ public class GameManager : MonoBehaviour
             Texture2D currentPhoto = photoCollection[reviewIndex].photo;
             camScript.ShowPhoto(currentPhoto);
             reviewPhotoName.text = photoCollection[reviewIndex].name;
-            //int score = (int)photoCollection[reviewIndex].angle;
             int score = Mathf.Abs(500 - ((int)photoCollection[reviewIndex].angle)*10);
             reviewPhotoScore.text = score.ToString();
         }
