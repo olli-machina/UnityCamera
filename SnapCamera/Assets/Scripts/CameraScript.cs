@@ -7,8 +7,8 @@ using TMPro;
 public class CameraScript : MonoBehaviour
 {
     [Header("Photo Taker")]
-    [SerializeField] private Image photoDisplayArea;
-    [SerializeField] private GameObject photoFrame;
+    [SerializeField] private Image photoDisplayArea, endReviewDisplayArea;
+    [SerializeField] private GameObject photoFrame, endPhotoFrame;
     [SerializeField] private GameObject cameraUI;
     [SerializeField] private TextMeshProUGUI counterText;
 
@@ -17,20 +17,21 @@ public class CameraScript : MonoBehaviour
     private float photoTimer;
     public bool outOfFilm = false;
 
-    public int photoCount = 10;
-    public float photoDisplayTime;
+    public int photoCount = 2;
+    public float photoDisplayTime, endWaitTime;
 
     private GameManager gameManager;
     public Camera main, aim;
-
+    public GameObject endText;
 
     // Start is called before the first frame update
     void Start()
     {
-        screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
         counterText.SetText(photoCount.ToString());
         photoTimer = photoDisplayTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
     }
     // Update is called once per frame
     void Update()
@@ -53,10 +54,11 @@ public class CameraScript : MonoBehaviour
                     photoTimer = photoDisplayTime;
                 }
             }
-            //else
-            //{
-            //    gameManager.NextPhoto();
-            //}
+            else
+            {
+                gameManager.reviewIndex++;
+                gameManager.NextPhoto();
+            }
         }
 
         if(Input.GetMouseButtonDown(1))
@@ -88,6 +90,8 @@ public class CameraScript : MonoBehaviour
 
             Rect regionToRead = new Rect(0, 0, Screen.width, Screen.height);
 
+            screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+
             screenCapture.ReadPixels(regionToRead, 0, 0, false);
             screenCapture.Apply();
             gameManager.RecordPhotoData(screenCapture);
@@ -99,18 +103,35 @@ public class CameraScript : MonoBehaviour
             else
             {
                 outOfFilm = true;
-                gameManager.NextPhoto();
+                StartCoroutine(EndShoot());
+                gameManager.reviewScreen = true;
             }
         }
-
-
     }
+    IEnumerator EndShoot()
+    {
+        endText.SetActive(true);
+        yield return new WaitForSeconds(endWaitTime);
+        photoFrame.SetActive(false);
+        endText.SetActive(false);
+        gameManager.NextPhoto();
+    }
+
     public void ShowPhoto(Texture2D photo)
     {
         Sprite photoSprite = Sprite.Create(photo, new Rect(0.0f, 0.0f, photo.width, photo.height), new Vector2(0.5f, 0.5f), 100.0f);
-        photoDisplayArea.sprite = photoSprite;
+        if (!gameManager.reviewScreen)
+        {
+            photoDisplayArea.sprite = photoSprite;
+            photoFrame.SetActive(true);
+        }
+        else
+        {
+            photoFrame.SetActive(false);
+            endReviewDisplayArea.sprite = photoSprite;
+            endPhotoFrame.SetActive(true);
+        }
 
-        photoFrame.SetActive(true);
     }
 
     void RemovePhoto()

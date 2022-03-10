@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private float timeMoved;
     private Vector3 startPoint, endPoint;
 
-    private float mainPokeAngle;
-    private int mainPokeIndex;
+    private float mainPokeAngle = 0f;
+    private int mainPokeIndex = 0;
     public Transform photoPokemon;
     public bool pokemonInPhoto = false;
 
@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         float angleCount = 0f;
         mainPokeAngle = 0f;
 
-        for (int i = 1; i < inRangePokemon.Length; i++)
+        for (int i = 0; i < inRangePokemon.Length; i++)
         {
             Vector3 directionBetween = (inRangePokemon[i].position - transform.position).normalized;
             //directionBetween.y *= 0; //height not a factor
